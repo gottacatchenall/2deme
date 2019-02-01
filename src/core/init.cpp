@@ -25,11 +25,15 @@ void read_params_file(){
 
     while (std::getline(infile, line)) {
         std::istringstream iss(line);
-        std::string name;
-        double val;
+        std::vector<std::string> record;
+        while (iss){
+          std::string s;
+          if (!getline(iss, s, ',' )) break;
+          record.push_back( s );
+        }
 
-        iss >> name;
-        iss >> val;
+        std::string name = record[0];
+        double val = atof(record[1].c_str());
 
         params.insert(std::pair<std::string, double>(name, val));
     }
