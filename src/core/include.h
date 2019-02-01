@@ -67,7 +67,7 @@ void log_eff_migration(Patch* patch_i);
 void log_attempted_migration(Patch* patch_i, Patch* patch_j);
 void log_successful_migration(Patch* patch_i, Patch* patch_j);
 void log_population(Patch* patch_i);
-void log_locus(int l, int ef, double strength, std::string type);
+void log_locus(int l, int ef, double strength, int chromo, std::string type);
 //void log_linkage(int patch_num, int l1, double al1,  int l2, double al2, double D, std::string type);
 //void log_global_linkage(int l1, double al1, int l2, double al2, double D, std::string type);
 void log_linkage(int patch_num, int l1, int l2, double D, std::string type);

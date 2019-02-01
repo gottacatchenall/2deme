@@ -167,16 +167,16 @@ void log_allele_freq(int patch_num, int locus, double allele_val, double freq, s
     file << patch_num << "," << generation << "," << locus << "," << allele_val << "," << freq << "," << type << "\n";
 }
 
-void log_locus(int l, int ef, double strength, std::string type){
+void log_locus(int l, int ef, double strength, int chromo, std::string type){
     std::string locus_file = "loci.csv";
     std::ofstream file;
 
     file.open(locus_file.c_str(), std::ios::app);
     if(is_file_empty(locus_file)){
-        file << "locus,ef,selection_strength,type\n";
+        file << "locus,ef,selection_strength,chromo,type\n";
     }
 
-    file << l << "," << ef << "," << strength <<  "," << type << "\n";
+    file << l << "," << ef << "," << strength << "," << chromo << "," << type << "\n";
 }
 
 void log_colonization(int patch_num){
@@ -207,8 +207,6 @@ void log_env_factors(int x, int y){
     std::string env_factor_file = "env_factors.csv";
     std::ofstream file;
     file.open(env_factor_file.c_str(), std::ios::app);
-
-
 
 
     if(is_file_empty(env_factor_file)){
