@@ -15,10 +15,9 @@ def main():
     i = 0
     if (args['BATCH']):
         mig_space = [0.01, 0.03, 0.05]
-        locus_space = [0.01, 0.1, 0.3]
-        k_space = [1500, 2500, 3500, 4500]
+        locus_space = [0.01, 0.05, 0.1]
+        k_space = [2500, 3500, 4500, 5500]
         n_ef_space = [1,2,3]
-        ef_diff_space = [0.1, 0.5, 0.9]
         n_rep = 30
 
         print('Num runs: %d' % (len(n_ef_space)*len(ef_diff_space)*len(mig_space)*len(locus_space)*len(k_space)*n_rep))
@@ -28,8 +27,7 @@ def main():
             for locus_weight in locus_space:
                 for k_mean in k_space:
                     for n_ef in n_ef_space:
-                        for ef_diff in ef_diff_space:
-                            path = 'K%d_LW%.2f_MR%.2f_%dEF_%.2fDIFF_rep' % (k_mean, locus_weight, mig_rate, n_ef, ef_diff)
+                            path = 'K%d_LW%.2f_MR%.2f_%dEF_rep' % (k_mean, locus_weight, mig_rate, n_ef)
                             treatment_ct += 1
                             for rep in range(n_rep):
                                 params = {}

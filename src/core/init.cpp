@@ -41,10 +41,10 @@ void read_params_file(){
 
 void initialize_env_factors(){
     int n_ef = params["NUM_ENV_FACTORS"];
-    double diff = params["EF_DIFFERENCE"];
 
     envFactors = new std::vector<EnvFactor*>;
     for (int i = 0; i < n_ef; i++){
+        double diff = real_uniform(0, 1, ef_generator);
         EnvFactor* ef_i = new EnvFactor(diff);
         envFactors->push_back(ef_i);
     }
