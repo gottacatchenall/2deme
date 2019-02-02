@@ -2,10 +2,9 @@
 
 from webweb import Web
 import csv, sys, os, pandas
+import networkx as nx
 
-
-
-def main(ld_file, loci_file):
+def net_vis(ld_file, loci_file):
     web = Web(title='webweb')
 
     loci_path = os.path.abspath(loci_file)
@@ -24,7 +23,7 @@ def main(ld_file, loci_file):
 
     gens = df['generation'].unique()
 
-    thres = 0.05
+    thres = 0.005
 
     max_locus = df['locus2'].max()
     metadata = {
@@ -61,10 +60,35 @@ def main(ld_file, loci_file):
     #web.display.scaleLinkWidth = True
     web.show()
 
-#edge_list = [[1, 2], [2, 3], [3, 4]]
+def mod_over_time(ld_file, loci_file):
+    path = os.path.abspath(ld_file)
+    df = pandas.read_csv(path)
+    gens = df['generation'].unique()
+    max_locus = df['locus2'].max()
 
-# instantiate webweb and show the result
-#Web(edge_list).show()
+
+    for gen in gens:
+        q = 'generation == ' + str(gen)
+        this_gen = df.query(q)
+
+        G = nx.DiGraph()
+        for l in range(max_locus):
+            G.add_node(l)
+
+
+        for row in this_gen.itertuples():
+            L1 = row[2]
+            L2 = row[3]
+            D = row[4]
+            Gen = row[1]
+            if D > thres:
+                G.add_edge(L1,L2)
+
+
+
+def main(ld_file, loci_file):
+    net_vis(ld_file, loci_file)
+    #mod_over_time(ld_file, loci_file)
 
 
 if __name__ == '__main__':

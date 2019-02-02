@@ -6,11 +6,14 @@ GenomeDict::GenomeDict(){
     int n_ef = params["NUM_ENV_FACTORS"];
     int n_loci_per_ef = params["NUM_LOCI_PER_EF"];
 
-    int* chromo = this->generate_perm_with_uniq_ints(n_chromo-1, n_loci);
+    //int* chromo = this->generate_perm_with_uniq_ints(n_chromo-1, n_loci);
 
+    int mean_chromo_length = (n_loci/ n_chromo);
+    int ct = 0;
     for (int i = 0; i < n_chromo; i++){
-        this->chromo_map.push_back(chromo[i]);
-        printf("chromo[i]: %d\n", chromo[i]);
+        ct += mean_chromo_length;
+        this->chromo_map.push_back(ct);
+        printf("chromo[i]: %d\n", ct);
     }
 
     std::sort(this->chromo_map.begin(), this->chromo_map.end());
@@ -74,8 +77,8 @@ GenomeDict::GenomeDict(){
     }
 
 
-    assert(this->chromo_map.size() == n_chromo);
-    free(chromo);
+    //assert(this->chromo_map.size() == n_chromo-1);
+    //free(chromo);
     free(uniq_perm);
 }
 
