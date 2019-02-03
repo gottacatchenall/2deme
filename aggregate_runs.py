@@ -181,10 +181,6 @@ def write_demography(run_id, source_dir_path, target_dir_path):
 
                 fit = 0
                 neut = 0
-                if t == "fitness":
-                    fit = 1
-                if t == "neutral":
-                    neut = 1
 
                 write_line = "%d,%d,%f,%f,%f,%f,%f,%f,%f,%d,%d\n" % (run_id, gen, fst_mean, fst_sigma, gld_mean, gld_sigma, lld_mean, lld_sigma, n_fixed, neut, fit)
 

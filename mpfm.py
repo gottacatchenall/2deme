@@ -40,7 +40,7 @@ def main():
                                 params["PATCH_K_MEAN"] = k_mean
 
                                 params["NUM_GENERATIONS"] = 500
-                                params["NUM_OF_CHROMOSOMES"] = chr
+                                #params["NUM_OF_CHROMOSOMES"] = chr
                                 params["DATA_DIRECTORY"] = path + str(rep)
                                 params["RANDOM_SEED"] = np.random.randint(0, 100000000)
                                 params["EF_RANDOM_SEED"] = np.random.randint(0, 100000000)
