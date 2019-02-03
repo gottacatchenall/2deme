@@ -56,7 +56,15 @@ void migration(){
         for (int j = 0; j < n_patches; j++){
             if (j != this_patch_id){
                 Patch* patch_j = (*patches)[j];
-                int n_i_to_j = int(prop * n_this_patch);
+                double n_i_to_j_flt = (prop * n_this_patch);
+                int n_i_to_j;
+                if (n_i_to_j_flt > 0 && n_i_to_j_flt < 1){
+                    n_i_to_j = int_uniform(0,2, main_generator);
+                }
+                else{
+                    n_i_to_j = int(n_i_to_j_flt);
+                }
+
                 indivs = patch_i->pick_n_random_indivs(n_i_to_j);
                 for (Individual* indiv_i: indivs){
                     patch_j->add_to_migrant_queue(indiv_i);
