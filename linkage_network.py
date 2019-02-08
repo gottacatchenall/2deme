@@ -1,10 +1,40 @@
 #! /usr/bin/env python
 
 from webweb import Web
-import csv, sys, os, pandas
+import csv, sys, os, pandas, traceback
 import networkx as nx
 from networkx.algorithms.community import greedy_modularity_communities, modularity
 import numpy as np
+
+metadata = pandas.DataFrame()
+
+def add_metadata(run_id, dir_path):
+    global metadata
+    params_path = 'params.ini'
+    param_file_path = dir_path  + params_path
+
+    df = pandas.read_csv(param_file_path, error_bad_lines=False, sep=',', header=None)
+    df = df.transpose()
+    df.columns = df.iloc[0]
+    df = df.reindex(df.index.drop(0))
+    df['run_id'] = run_id
+
+    #print df
+    if len(metadata) == 0:
+        metadata = df
+    else:
+        metadata = pandas.concat([metadata, df])
+    #print metadata
+    #with open(target_file_path, 'w') as f:
+        #metadata.to_csv(f, header=True)
+
+
+def write_metadata(target_dir_path):
+    global metadata
+    target_file_path = target_dir_path + '/' + metadata_path
+
+    with open(target_file_path, 'a') as f:
+        metadata.to_csv(f, header=True)
 
 def net_vis(ld_file, loci_file):
     web = Web(title='webweb')
@@ -62,21 +92,20 @@ def net_vis(ld_file, loci_file):
     #web.display.scaleLinkWidth = True
     web.show()
 
-def write_data(thr, gen, mean_deg, clus, mod, file_name):
-    write_line = '%f,%f,%f,%f,%f\n' % (thr, gen, mean_deg, clus, mod)
+def write_data(run_id, thr, gen, mean_deg, clus, mod, file_name):
+    write_line = '%d,%f,%f,%f,%f,%f\n' % (run_id,thr, gen, mean_deg, clus, mod)
     with open(file_name, 'a') as f:
         f.write(write_line)
 
 
 
-def mod_over_time(ld_file, data_file):
+def mod_over_time(run_id,ld_file, data_file):
     path = os.path.abspath(ld_file)
     df = pandas.read_csv(path)
     gens = df['generation'].unique()
     max_locus = int(df['locus2'].max())
 
-    thres_space = np.linspace(0.01, 1.0, 100)
-    print thres_space
+    thres_space = np.linspace(0.001, 0.02, 20)
     for thr in thres_space:
         for gen in gens:
             q = 'generation == ' + str(gen)
@@ -120,22 +149,33 @@ def mod_over_time(ld_file, data_file):
             except:
                 mod = 0
 
-            write_data(thr, gen, mean_deg, clus, mod, data_file)
+            write_data(run_id,thr, gen, mean_deg, clus, mod, data_file)
 
 
-def main(ld_file, loci_file):
+def main(dir):
     #net_vis(ld_file, loci_file)
     file_name = './output.csv'
     path = os.path.abspath(file_name)
-    print path
-    write_line = 'threshold,generation,mean_degree,clustering,modularity\n'
+
+    write_line = 'run_id,threshold,generation,mean_degree,clustering,modularity\n'
     with open(file_name, 'a') as f:
         f.write(write_line)
 
-    mod_over_time(ld_file, path)
+    run_id = 0
+    for x in (os.listdir(dir)):
+        try:
+            ld_file = dir + x + '/global_linkage.csv'
+            run_id += 1
+            mod_over_time(run_id, ld_file, path)
+        except:
+            print 'mod success'
+        try:
+            add_metadata(run_id, dir)
+            'print meta success'
+        except Exception:
+            traceback.print_exc()
 
-
+    write_metadata()
 if __name__ == '__main__':
-    file = sys.argv[1]
-    loci_file = sys.argv[2]
-    main(file, loci_file)
+    dir = sys.argv[1]
+    main(dir)
